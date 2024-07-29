@@ -28,29 +28,29 @@ jobs:
         uses: ethan92429/setup-openapi-generator-cli@v1
       - run: openapi-generator-cli generate -i openapi.json -g javascript -o ./nodejs-client
 
-      - name: Zip generated clients
+      - name: Create tar.gz for generated clients
         run: |
-          zip -r python-client.zip ./python-client
-          zip -r nodejs-client.zip ./nodejs-client
+          tar -czvf python-client.tar.gz -C ./python-client .
+          tar -czvf nodejs-client.tar.gz -C ./nodejs-client .
 
       - name: Upload Python client as artifact
         uses: actions/upload-artifact@v2
         with:
           name: python-client
-          path: python-client.zip
+          path: python-client.tar.gz
 
       - name: Upload Node.js client as artifact
         uses: actions/upload-artifact@v2
         with:
           name: nodejs-client
-          path: nodejs-client.zip
+          path: nodejs-client.tar.gz
 
       - name: Create Release with Assets
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            python-client.zip
-            nodejs-client.zip
+            python-client.tar.gz
+            nodejs-client.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
