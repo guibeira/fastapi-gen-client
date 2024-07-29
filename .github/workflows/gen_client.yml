@@ -1,0 +1,57 @@
+name: Generate API Clients
+on:
+  release:
+    types: [created]
+
+jobs:
+  generate-clients:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Generate openAPI spec
+        run: |
+          pip install -r requirements.txt && python cli.py main:app
+
+      - name: Generate python client
+        uses: ethan92429/setup-openapi-generator-cli@v1
+      - run: openapi-generator-cli generate -i openapi.json -g python -o ./python-client
+
+      - name: Generate Javascrip client
+        uses: ethan92429/setup-openapi-generator-cli@v1
+      - run: openapi-generator-cli generate -i openapi.json -g javascript -o ./nodejs-client
+
+      - name: Zip generated clients
+        run: |
+          zip -r python-client.zip ./python-client
+          zip -r nodejs-client.zip ./nodejs-client
+
+      - name: Upload Python client as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-client
+          path: python-client.zip
+
+      - name: Upload Node.js client as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: nodejs-client
+          path: nodejs-client.zip
+
+      - name: Create Release with Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            python-client.zip
+            nodejs-client.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
