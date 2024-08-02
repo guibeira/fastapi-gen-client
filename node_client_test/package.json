@@ -1,0 +1,6 @@
+{
+  "main": "index.js",
+  "dependencies": {
+    "fast_api": "https://github.com/guibeira/fastapi-gen-client/releases/download/v1.0.0/nodejs-client.tar.gz"
+  }
+}

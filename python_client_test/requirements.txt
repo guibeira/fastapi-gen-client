@@ -1,0 +1,2 @@
+
+openapi-client @ https://github.com/guibeira/fastapi-gen-client/releases/download/v1.0.0/python-client.tar.gz#sha256=cbf87ade0b77f7241ee9c7209b6d769aa8d6557d57812576848cbd0d76001605
